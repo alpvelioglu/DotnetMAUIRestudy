@@ -29,11 +29,27 @@ namespace HelloMauiDefault
                         .Paddings(left: 8),
 
                 SelectionMode = SelectionMode.Single,
+            }
+            .ItemsSource(MauiLibraries)
+            .ItemTemplate(new MauiLibrariesDataTemplate())
+            .Invoke(collectionView => collectionView.SelectionChanged += HandleSelectionChanged);
+        }
 
-                ItemsSource = MauiLibraries,
-                ItemTemplate = new MauiLibrariesDataTemplate(),
+        private async void HandleSelectionChanged(object? sender, SelectionChangedEventArgs e)
+        {
+            ArgumentNullException.ThrowIfNull(sender);
 
-            };
+            var cw = (CollectionView)sender;
+
+            if(e.CurrentSelection.FirstOrDefault() is LibraryModel library)
+            {
+                await Shell.Current.GoToAsync(AppShell.GetRoute<DetailsPage>(), new Dictionary<string, object>
+                {
+                    {DetailsPage.LibraryModelKey, library }
+                });
+            }
+
+            cw.SelectedItem = null;
         }
 
         ObservableCollection<LibraryModel> MauiLibraries { get; } = new()

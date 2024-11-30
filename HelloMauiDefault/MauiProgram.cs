@@ -22,6 +22,9 @@ namespace HelloMauiDefault
 #if DEBUG
     		builder.Logging.AddDebug();
 #endif
+            builder.Services.AddSingleton<AppShell>();
+            builder.Services.AddSingleton<App>();
+            builder.Services.AddTransient<CollectionViewDemo_Markup>();
 
             return builder.Build();
         }

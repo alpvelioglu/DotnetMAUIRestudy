@@ -9,7 +9,7 @@
 
         protected override Window CreateWindow(IActivationState? activationState)
         {
-            return new Window(new CollectionViewDemo_Markup());
+            return new Window(new AppShell());
         }
     }
 }
