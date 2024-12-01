@@ -44,7 +44,7 @@ namespace HelloMauiDefault
                     .TextCenter()
                     .Center()
                     .Font(italic: true, size: 16)
-                    .Assign(out _libraryTitleLabel),
+                    .Assign(out _libraryDescLabel), // Yanlışıkla title vermiştim. Null hatası fırlatıyordu aman dikkat.
 
                     new Button()
                     .Text("Back")
