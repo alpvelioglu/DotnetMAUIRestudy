@@ -102,9 +102,12 @@ namespace HelloMauiDefault
             ArgumentNullException.ThrowIfNull(sender);
             var collectionView = (CollectionView)sender;
 
-            if (e.CurrentSelection.FirstOrDefault() is LibraryModel model)
+            if (e.CurrentSelection.FirstOrDefault() is LibraryModel library)
             {
-                await Toast.Make($"{model.Title} Tapped").Show();
+                await Shell.Current.GoToAsync(AppShell.GetRoute<DetailsPage>(), new Dictionary<string, object>
+                {
+                    {DetailsPage.LibraryModelKey, library }
+                });
             }
 
             collectionView.SelectedItem = null;
