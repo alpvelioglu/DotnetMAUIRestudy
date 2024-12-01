@@ -4,12 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using CommunityToolkit.Maui.Markup;
+using HelloMauiDefault.Pages;
 using Microsoft.Maui.Layouts;
 using static CommunityToolkit.Maui.Markup.GridRowsColumns;
 
 namespace HelloMauiDefault
 {
-    public class MainPage : BaseContentPage
+    public class MainPage : ContentPage
     {
         const int imageWidthRequest = 500;
         const int imageHeightRequest = 250;

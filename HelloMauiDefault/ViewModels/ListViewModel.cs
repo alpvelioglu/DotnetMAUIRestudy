@@ -1,119 +1,107 @@
-﻿using CommunityToolkit.Maui.Alerts;
-using CommunityToolkit.Maui.Behaviors;
-using CommunityToolkit.Maui.Markup;
-using CommunityToolkit.Maui.Views;
+﻿using CommunityToolkit.Mvvm.Input;
+using HelloMauiDefault.Models;
+using HelloMauiDefault.Pages;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Input;
 
-namespace HelloMauiDefault
+namespace HelloMauiDefault.ViewModels
 {
-    public class CollectionViewDemo_Markup : BaseContentPage
+    public class ListViewModel : BaseViewModel
     {
-        readonly SearchBar _searchBar;
-        public CollectionViewDemo_Markup()
+        string _searchBarText = string.Empty;
+        bool _isSearchBarEnabled = true;
+        bool _isRefreshing = false;
+        object? _selectedItem = null;
+        public string SearchBarText
         {
-            this.AppThemeBinding(BackgroundColorProperty, Colors.LightBlue, Color.FromArgb("#3b4a4f"));
-
-            Content = new RefreshView
-            {
-                Content = new CollectionView
-                {
-                    Header = new SearchBar()
-                        .Placeholder("Search Titles")
-                        .Center()
-                        .TextCenter()
-                        .Behaviors(new UserStoppedTypingBehavior()
-                        {
-                            StoppedTypingTimeThreshold = 1000,
-                            ShouldDismissKeyboardAutomatically = true,
-                            Command = new Command(() => UserStoppedTyping())
-                        })
-                        .TapGesture(async() =>
-                        {
-                            await Toast.Make(".NET MAUI RULES!").Show();
-                        })
-                        .Assign(out _searchBar),
-
-                    Footer = new Label()
-                        .Text(".NET MAUI: From Zero to Hero")
-                        .TextCenter()
-                        .Center()
-                        .Font(size: 10)
-                        .Paddings(left: 8),
-
-                    SelectionMode = SelectionMode.Single,
-
-                }.ItemsSource(MauiLibraries)
-                .ItemTemplate(new MauiLibrariesDataTemplate())
-                .Invoke(collectionView => collectionView.SelectionChanged += HandleSelectionChanged)
-            }.Invoke(refreshView => refreshView.Refreshing += HandleRefreshing);
+            get => _searchBarText;
+            set => SetProperty(ref _searchBarText, value);
         }
 
-        protected override void OnAppearing()
+        public bool IsSearchBarEnabled
         {
-            base.OnAppearing();
-            this.ShowPopup(new WelcomePopup());
+            get => _isSearchBarEnabled;
+            set => SetProperty(ref _isSearchBarEnabled, value);
         }
 
-        private void UserStoppedTyping()
+        public bool IsRefreshing
+        {
+            get => _isRefreshing;
+            set => SetProperty(ref _isRefreshing, value);
+        }
+
+        public object? SelectedItem
+        {
+            get => _selectedItem;
+            set => SetProperty(ref _selectedItem, value);
+        }
+
+        public ListViewModel()
+        {
+            UserStoppedTypingCommand = new RelayCommand(UserStoppedTyping);
+            RefreshCommand = new AsyncRelayCommand(HandleRefreshing);
+            HandleSelectionChangedCommand = new AsyncRelayCommand(HandleSelectionChanged);
+        }
+        public ICommand UserStoppedTypingCommand { get; }
+        public ICommand RefreshCommand { get; }
+        public ICommand HandleSelectionChangedCommand { get; }
+        public ObservableCollection<LibraryModel> MauiLibraries { get; } = new(CreateLibraries());
+        void UserStoppedTyping()
         {
             MauiLibraries.Clear();
-            var searchBarText = _searchBar.Text;
-            if(string.IsNullOrWhiteSpace(searchBarText))
+            if (string.IsNullOrWhiteSpace(SearchBarText))
             {
-                foreach(var library in CreateLibraries())
+                foreach (var library in CreateLibraries())
                 {
                     MauiLibraries.Add(library);
                 }
             }
             else
             {
-                foreach(var library in CreateLibraries().Where(x => x.Title.Contains(searchBarText, StringComparison.OrdinalIgnoreCase)))
+                foreach (var library in CreateLibraries().Where(x => x.Title.Contains(SearchBarText, StringComparison.OrdinalIgnoreCase)))
                 {
                     MauiLibraries.Add(library);
                 }
             }
         }
 
-        async void HandleRefreshing(object? sender, EventArgs e)
+        async Task HandleRefreshing()
         {
-            ArgumentNullException.ThrowIfNull(sender);
+            IsSearchBarEnabled = false;
 
-            _searchBar.IsEnabled = false;
-
-            var refreshView = (RefreshView)sender;
-            await Task.Delay(TimeSpan.FromSeconds(2));
-            MauiLibraries.Add(new LibraryModel{
-                Title = "Sharpnado.Tabs",
-                Description = "A pure MAUI Tabs library",
-                ImageSource = "https://api.nuget.org/v3-flatcontainer/sharpnado.tabs/2.2.0/icon"
-            });
-
-            refreshView.IsRefreshing = false;
-            _searchBar.IsEnabled = true;
+            try
+            {
+                await Task.Delay(TimeSpan.FromSeconds(2));
+                MauiLibraries.Add(new LibraryModel
+                {
+                    Title = "Sharpnado.Tabs",
+                    Description = "A pure MAUI Tabs library",
+                    ImageSource = "https://api.nuget.org/v3-flatcontainer/sharpnado.tabs/2.2.0/icon"
+                });
+            }
+            finally
+            {
+                IsRefreshing = false;
+                IsSearchBarEnabled = true;
+            }
         }
 
-        private async void HandleSelectionChanged(object? sender, SelectionChangedEventArgs e)
+        public async Task HandleSelectionChanged()
         {
-            ArgumentNullException.ThrowIfNull(sender);
-            var collectionView = (CollectionView)sender;
-
-            if (e.CurrentSelection.FirstOrDefault() is LibraryModel library)
+            if (SelectedItem is LibraryModel library)
             {
                 await Shell.Current.GoToAsync(AppShell.GetRoute<DetailsPage>(), new Dictionary<string, object>()
                 {
-                    { DetailsPage.LibraryModelKey, library }
+                    { DetailsViewModel.LibraryModelKey, library }
                 });
             }
-
-            collectionView.SelectedItem = null;
+            //SelectedItem = null;
         }
-
-        ObservableCollection<LibraryModel> MauiLibraries { get; } = new(CreateLibraries());
 
         static List<LibraryModel> CreateLibraries() => new()
         {
@@ -166,17 +154,5 @@ namespace HelloMauiDefault
                 ImageSource = "https://nromanov.gallerycdn.vsassets.io/extensions/nromanov/dotnet-meteor/3.0.3/1686392945636/Microsoft.VisualStudio.Services.Icons.Default"
             },
         };
-
-        class WelcomePopup : Popup
-        {
-            public WelcomePopup()
-            {
-                Content = new Label()
-                    .Text("WelcomeBro")
-                    .Font(size: 42, bold: true)
-                    .Center()
-                    .TextCenter();
-            }
-        }
     }
 }

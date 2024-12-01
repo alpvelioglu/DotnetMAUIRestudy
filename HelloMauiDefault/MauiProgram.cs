@@ -1,5 +1,7 @@
 ﻿using CommunityToolkit.Maui;
 using CommunityToolkit.Maui.Markup;
+using HelloMauiDefault.Pages;
+using HelloMauiDefault.ViewModels;
 using Microsoft.Extensions.Logging;
 
 namespace HelloMauiDefault
@@ -24,7 +26,11 @@ namespace HelloMauiDefault
 #endif
             builder.Services.AddSingleton<AppShell>();
             builder.Services.AddSingleton<App>();
-            builder.Services.AddTransient<CollectionViewDemo_Markup>();
+
+            builder.Services.AddTransient<ListPage>();
+            builder.Services.AddTransient<DetailsPage>();
+            builder.Services.AddTransient<DetailsViewModel>();
+            builder.Services.AddTransient<ListViewModel>();
 
             return builder.Build();
         }

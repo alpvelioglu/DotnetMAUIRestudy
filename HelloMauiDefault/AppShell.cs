@@ -1,4 +1,6 @@
-﻿using System;
+﻿using HelloMauiDefault.Pages;
+using HelloMauiDefault.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,20 +12,20 @@ namespace HelloMauiDefault
     {
         public AppShell()
         {
-            Items.Add(new CollectionViewDemo_Markup());
-            Routing.RegisterRoute(GetRoute<CollectionViewDemo_Markup>(), typeof(DetailsPage));
+            Items.Add(new ListPage(new ListViewModel()));
+            Routing.RegisterRoute(GetRoute<ListPage>(), typeof(DetailsPage));
             Routing.RegisterRoute(GetRoute<DetailsPage>(), typeof(DetailsPage));
         }
 
-        public static string GetRoute<T>() where T : class
+        public static string GetRoute<T>() where T : ContentPage
         {
             if(typeof(T) == typeof(DetailsPage))
             {
-                return $"//{nameof(CollectionViewDemo_Markup)}/{nameof(DetailsPage)}";
+                return $"//{nameof(ListPage)}/{nameof(DetailsPage)}";
             }
-            else if(typeof(T) == typeof(CollectionViewDemo_Markup))
+            else if(typeof(T) == typeof(ListPage))
             {
-                return $"//{nameof(CollectionViewDemo_Markup)}";
+                return $"//{nameof(ListPage)}";
             }
             else
             {
