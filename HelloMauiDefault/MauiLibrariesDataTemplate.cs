@@ -44,14 +44,17 @@ namespace HelloMauiDefault
                 new Label()
                     .Row(Row.Title).Column(Column.Text)
                     .Font(size: 18, bold: true)
+                    .AppThemeBinding(Label.TextColorProperty, Colors.Red, Colors.RosyBrown)
+                    //.TextColor(Color.FromArgb("#262626"))
                     .TextCenter()
                     .TextStart()
                     .Bind(Label.TextProperty, getter: (LibraryModel model) => model.Title,
                                                 mode: BindingMode.OneWay),
 
-                new Label {MaxLines = 2, LineBreakMode = LineBreakMode.TailTruncation}
+                new Label {MaxLines = 2, LineBreakMode = LineBreakMode.WordWrap}
                     .Row(Row.Description).Column(Column.Text)
                     .Font(size: 12)
+                    .TextColor(Color.FromArgb("#595959"))
                     .TextTop()
                     .TextStart()
                     .Bind(Label.TextProperty, getter: (LibraryModel model) => model.Description,
