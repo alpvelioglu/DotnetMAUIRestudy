@@ -104,9 +104,9 @@ namespace HelloMauiDefault
 
             if (e.CurrentSelection.FirstOrDefault() is LibraryModel library)
             {
-                await Shell.Current.GoToAsync(AppShell.GetRoute<DetailsPage>(), new Dictionary<string, object>
+                await Shell.Current.GoToAsync(AppShell.GetRoute<DetailsPage>(), new Dictionary<string, object>()
                 {
-                    {DetailsPage.LibraryModelKey, library }
+                    { DetailsPage.LibraryModelKey, library }
                 });
             }
 
