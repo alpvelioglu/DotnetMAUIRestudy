@@ -85,7 +85,7 @@ namespace HelloMauiDefault.ViewModels
         {
             if (SelectedItem is LibraryModel library)
             {
-                await Shell.Current.GoToAsync(AppShell.GetRoute<DetailsPage>(), new Dictionary<string, object>()
+                await Shell.Current.GoToAsync(AppShell.GetRoute<DetailsPageButXaml>(), new Dictionary<string, object>()
                 {
                     { DetailsViewModel.LibraryModelKey, library }
                 });

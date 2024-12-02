@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<helloMaui:BaseContentPage x:TypeArguments="viewModel:ListViewModel"
+             xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="HelloMauiDefault.ListPageButXaml"
+             xmlns:view="clr-namespace:HelloMauiDefault.Views"
+             xmlns:helloMaui="clr-namespace:HelloMauiDefault.Pages"
+             xmlns:viewModel="clr-namespace:HelloMauiDefault.ViewModels"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             Title="ListPageButXaml"
+             x:DataType="viewModel:ListViewModel"
+             BackgroundColor="{AppThemeBinding Dark=Red, Light=#3b4a4f}">
+
+    <RefreshView Command="{Binding HandleRefreshingCommand}"
+                 IsRefreshing="{Binding IsRefreshing}"
+                 Margin="12,24,12,0">
+        <CollectionView SelectionMode="Single" SelectedItem="{Binding SelectedItem}"
+                        SelectionChangedCommand="{Binding HandleSelectionChangedCommand}"
+                        ItemsSource="{Binding MauiLibraries}">
+            <CollectionView.ItemTemplate>
+                <view:MauiLibrariesDataTemplate />
+            </CollectionView.ItemTemplate>
+            <CollectionView.Header>
+                <SearchBar x:Name="searchBarProp" Placeholder="Search Titles" 
+                           HorizontalOptions="Center"
+                           HorizontalTextAlignment="Center"
+                           VerticalOptions="Center"
+                           VerticalTextAlignment="Center"
+                           Text="{Binding SearchBarText}"
+                           IsEnabled="{Binding IsSearchBarEnabled}"
+                           TextColor="{AppThemeBinding Light=Black, Dark=White}">
+                    <SearchBar.Behaviors>
+                        <toolkit:UserStoppedTypingBehavior StoppedTypingTimeThreshold="1000"
+                                                           ShouldDismissKeyboardAutomatically="True"
+                                                           BindingContext="{Binding Path=BindingContext, Source=searchBarProp}"
+                                                           Command="{Binding Path=UserStoppedTypingCommand}">
+                            
+                        </toolkit:UserStoppedTypingBehavior>
+                    </SearchBar.Behaviors>
+
+                    <SearchBar.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="TapGestureRecognizer_Tapped" NumberOfTapsRequired="2" />
+                    </SearchBar.GestureRecognizers>
+                </SearchBar>
+            </CollectionView.Header>
+
+            <CollectionView.Footer>
+                <Label Text="AEV" Padding="8,0,0,0" FontSize="10"
+                       HorizontalOptions="Center"
+                       HorizontalTextAlignment="Center"
+                       VerticalOptions="Center"
+                       VerticalTextAlignment="Center"
+                       TextColor="{AppThemeBinding Light=#474f52, Dark=DarkGrey}"/>
+            </CollectionView.Footer>
+        </CollectionView>
+    </RefreshView>
+    
+    
+</helloMaui:BaseContentPage>
