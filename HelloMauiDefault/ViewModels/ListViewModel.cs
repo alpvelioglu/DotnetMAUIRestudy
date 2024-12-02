@@ -14,7 +14,7 @@ namespace HelloMauiDefault.ViewModels
 {
     public partial class ListViewModel : BaseViewModel
     {
-        readonly IDispatcher _dispatcher;
+        //readonly IDispatcher _dispatcher;
         [ObservableProperty]
         string _searchBarText = string.Empty;
         [ObservableProperty]
@@ -24,28 +24,36 @@ namespace HelloMauiDefault.ViewModels
         [ObservableProperty]
         object? _selectedItem = null;
 
-        public ListViewModel(IDispatcher dispatcher)
+        public ListViewModel()
         {
-            _dispatcher = dispatcher;
+            
         }
+
+        //public ListViewModel(IDispatcher dispatcher)
+        //{
+        //    _dispatcher = dispatcher;
+        //}
         public ObservableCollection<LibraryModel> MauiLibraries { get; } = new(CreateLibraries());
 
         [RelayCommand]
         async Task UserStoppedTyping()
         {
-            await _dispatcher.DispatchAsync(MauiLibraries.Clear);
+            //await _dispatcher.DispatchAsync(MauiLibraries.Clear);
+            MauiLibraries.Clear();
             if (string.IsNullOrWhiteSpace(SearchBarText))
             {
                 foreach (var library in CreateLibraries())
                 {
-                    await _dispatcher.DispatchAsync(() => MauiLibraries.Add(library));
+                    //await _dispatcher.DispatchAsync(() => MauiLibraries.Add(library));
+                    MauiLibraries.Add(library);
                 }
             }
             else
             {
                 foreach (var library in CreateLibraries().Where(x => x.Title.Contains(SearchBarText, StringComparison.OrdinalIgnoreCase)))
                 {
-                    await _dispatcher.DispatchAsync(() => MauiLibraries.Add(library));
+                    //await _dispatcher.DispatchAsync(() => MauiLibraries.Add(library));
+                    MauiLibraries.Add(library);
                 }
             }
         }
@@ -82,7 +90,7 @@ namespace HelloMauiDefault.ViewModels
                     { DetailsViewModel.LibraryModelKey, library }
                 });
             }
-            SelectedItem = null;
+            //SelectedItem = null;
         }
 
         static List<LibraryModel> CreateLibraries() => new()

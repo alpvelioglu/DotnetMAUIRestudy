@@ -10,9 +10,9 @@ namespace HelloMauiDefault
 {
     public partial class AppShell : Shell
     {
-        public AppShell(ListPage listPage)
+        public AppShell()
         {
-            Items.Add(listPage);
+            Items.Add(new ListPage(new ListViewModel()));
             Routing.RegisterRoute(GetRoute<ListPage>(), typeof(DetailsPage));
             Routing.RegisterRoute(GetRoute<DetailsPage>(), typeof(DetailsPage));
         }
