@@ -57,7 +57,7 @@ namespace HelloMauiDefault.Pages
                       setter: (ListViewModel vm, object? selectedItem) => vm.SelectedItem = selectedItem)
                 .Bind(CollectionView.SelectionChangedCommandProperty, getter: (ListViewModel vm) => vm.HandleSelectionChangedCommand)
                 .Bind(CollectionView.ItemsSourceProperty, getter: (ListViewModel vm) => vm.MauiLibraries)
-            }.Bind(RefreshView.CommandProperty, getter: (ListViewModel vm) => vm.RefreshCommand)
+            }.Bind(RefreshView.CommandProperty, getter: (ListViewModel vm) => vm.HandleRefreshingCommand)
             .Bind(RefreshView.IsRefreshingProperty, getter: (ListViewModel vm) => vm.IsRefreshing, setter: (ListViewModel vm, bool isRefreshing) => vm.IsRefreshing = isRefreshing);
         }
 

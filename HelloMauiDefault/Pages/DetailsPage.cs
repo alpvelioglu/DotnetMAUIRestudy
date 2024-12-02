@@ -49,7 +49,7 @@ namespace HelloMauiDefault.Pages
 
                     new Button()
                     .Text("Back")
-                    .Bind(Button.CommandProperty, getter: (DetailsViewModel vm) => vm.BackButtonCommand)
+                    .Bind(Button.CommandProperty, getter: (DetailsViewModel vm) => vm.HandleButtonClickedCommand)
                 }
             }.Center().Padding(12);
         }

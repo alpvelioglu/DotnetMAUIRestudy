@@ -1,4 +1,5 @@
-﻿using CommunityToolkit.Mvvm.Input;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using HelloMauiDefault.Models;
 using HelloMauiDefault.Pages;
 using System;
@@ -11,65 +12,45 @@ using System.Windows.Input;
 
 namespace HelloMauiDefault.ViewModels
 {
-    public class ListViewModel : BaseViewModel
+    public partial class ListViewModel : BaseViewModel
     {
+        readonly IDispatcher _dispatcher;
+        [ObservableProperty]
         string _searchBarText = string.Empty;
+        [ObservableProperty]
         bool _isSearchBarEnabled = true;
+        [ObservableProperty]
         bool _isRefreshing = false;
+        [ObservableProperty]
         object? _selectedItem = null;
-        public string SearchBarText
-        {
-            get => _searchBarText;
-            set => SetProperty(ref _searchBarText, value);
-        }
 
-        public bool IsSearchBarEnabled
+        public ListViewModel(IDispatcher dispatcher)
         {
-            get => _isSearchBarEnabled;
-            set => SetProperty(ref _isSearchBarEnabled, value);
+            _dispatcher = dispatcher;
         }
-
-        public bool IsRefreshing
-        {
-            get => _isRefreshing;
-            set => SetProperty(ref _isRefreshing, value);
-        }
-
-        public object? SelectedItem
-        {
-            get => _selectedItem;
-            set => SetProperty(ref _selectedItem, value);
-        }
-
-        public ListViewModel()
-        {
-            UserStoppedTypingCommand = new RelayCommand(UserStoppedTyping);
-            RefreshCommand = new AsyncRelayCommand(HandleRefreshing);
-            HandleSelectionChangedCommand = new AsyncRelayCommand(HandleSelectionChanged);
-        }
-        public ICommand UserStoppedTypingCommand { get; }
-        public ICommand RefreshCommand { get; }
-        public ICommand HandleSelectionChangedCommand { get; }
         public ObservableCollection<LibraryModel> MauiLibraries { get; } = new(CreateLibraries());
-        void UserStoppedTyping()
+
+        [RelayCommand]
+        async Task UserStoppedTyping()
         {
-            MauiLibraries.Clear();
+            await _dispatcher.DispatchAsync(MauiLibraries.Clear);
             if (string.IsNullOrWhiteSpace(SearchBarText))
             {
                 foreach (var library in CreateLibraries())
                 {
-                    MauiLibraries.Add(library);
+                    await _dispatcher.DispatchAsync(() => MauiLibraries.Add(library));
                 }
             }
             else
             {
                 foreach (var library in CreateLibraries().Where(x => x.Title.Contains(SearchBarText, StringComparison.OrdinalIgnoreCase)))
                 {
-                    MauiLibraries.Add(library);
+                    await _dispatcher.DispatchAsync(() => MauiLibraries.Add(library));
                 }
             }
         }
 
+        [RelayCommand]
         async Task HandleRefreshing()
         {
             IsSearchBarEnabled = false;
@@ -91,6 +72,7 @@ namespace HelloMauiDefault.ViewModels
             }
         }
 
+        [RelayCommand]
         public async Task HandleSelectionChanged()
         {
             if (SelectedItem is LibraryModel library)
@@ -100,7 +82,7 @@ namespace HelloMauiDefault.ViewModels
                     { DetailsViewModel.LibraryModelKey, library }
                 });
             }
-            //SelectedItem = null;
+            SelectedItem = null;
         }
 
         static List<LibraryModel> CreateLibraries() => new()

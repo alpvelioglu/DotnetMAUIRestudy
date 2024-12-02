@@ -6,41 +6,24 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace HelloMauiDefault.ViewModels
 {
-    public class DetailsViewModel : BaseViewModel, IQueryAttributable
+    public partial class DetailsViewModel : BaseViewModel, IQueryAttributable
     {
         public const string LibraryModelKey = nameof(LibraryModelKey);
+        [ObservableProperty]
         ImageSource? _libraryImageSource;
+
+        [ObservableProperty]
         string? _libraryTitle;
+
+        [ObservableProperty]
         string? _libraryDescription;
 
-        public ICommand BackButtonCommand { get; }
-
-        public DetailsViewModel()
-        {
-            BackButtonCommand = new AsyncRelayCommand(() => HandleButtonClicked());
-        }
-
-        public ImageSource? LibraryImageSource
-        {
-            get => _libraryImageSource;
-            set => SetProperty(ref _libraryImageSource, value);
-        }
-
-        public string? LibraryTitle
-        {
-            get => _libraryTitle;
-            set => SetProperty(ref _libraryTitle, value);
-        }
-
-        public string? LibraryDescription
-        {
-            get => _libraryDescription;
-            set => SetProperty(ref _libraryDescription, value);
-        }
-        private async Task HandleButtonClicked()
+        [RelayCommand]
+        public async Task HandleButtonClicked()
         {
             await Shell.Current.GoToAsync("..", true);
         }
