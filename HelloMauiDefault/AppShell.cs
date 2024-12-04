@@ -15,22 +15,29 @@ namespace HelloMauiDefault
             Items.Add(new ListPage(new ListViewModel()));
             Routing.RegisterRoute(GetRoute<ListPage>(), typeof(DetailsPage));
             Routing.RegisterRoute(GetRoute<DetailsPage>(), typeof(DetailsPage));
+            Routing.RegisterRoute(GetRoute<CalendarPage>(), typeof(CalendarPage));
         }
 
         public static string GetRoute<T>() where T : ContentPage
         {
-            if(typeof(T) == typeof(DetailsPage))
-            {
-                return $"//{nameof(ListPage)}/{nameof(DetailsPage)}";
-            }
-            else if(typeof(T) == typeof(ListPage))
+            var pageType = typeof(T);
+
+            if (pageType == typeof(ListPage))
             {
                 return $"//{nameof(ListPage)}";
             }
-            else
+
+            if (pageType == typeof(DetailsPage))
             {
-                throw new ArgumentException("Invalid route type");
+                return $"//{nameof(ListPage)}/{nameof(DetailsPage)}";
             }
+
+            if (pageType == typeof(CalendarPage))
+            {
+                return $"//{nameof(ListPage)}/{nameof(CalendarPage)}";
+            }
+
+            throw new NotSupportedException($"Page {pageType.FullName} Not Found in Routing Table");
         }
     }
 }

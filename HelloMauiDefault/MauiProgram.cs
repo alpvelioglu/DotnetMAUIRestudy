@@ -1,7 +1,9 @@
 ﻿using CommunityToolkit.Maui;
 using CommunityToolkit.Maui.Markup;
+using HelloMauiDefault.Handlers;
 using HelloMauiDefault.Pages;
 using HelloMauiDefault.ViewModels;
+using HelloMauiDefault.Views;
 using Microsoft.Extensions.Logging;
 
 namespace HelloMauiDefault
@@ -15,6 +17,10 @@ namespace HelloMauiDefault
                 .UseMauiApp<App>()
                 .UseMauiCommunityToolkit()
                 .UseMauiCommunityToolkitMarkup()
+                .ConfigureMauiHandlers(handlers =>
+                {
+                    handlers.AddHandler<CalendarView, CalendarHandler>();
+                })
                 .ConfigureFonts(fonts =>
                 {
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
@@ -27,10 +33,9 @@ namespace HelloMauiDefault
             builder.Services.AddSingleton<AppShell>();
             builder.Services.AddSingleton<App>();
 
-            builder.Services.AddTransient<ListPage>();
-            builder.Services.AddTransient<DetailsPage>();
-            builder.Services.AddTransient<DetailsViewModel>();
-            builder.Services.AddTransient<ListViewModel>();
+            builder.Services.AddTransient<ListPage, ListViewModel>();
+            builder.Services.AddTransient<DetailsPage, DetailsViewModel>();
+            builder.Services.AddTransient<Views.CalendarView>();
 
             return builder.Build();
         }

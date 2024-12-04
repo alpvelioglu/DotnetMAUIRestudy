@@ -20,12 +20,16 @@ namespace HelloMauiDefault.Pages
         {
             this.AppThemeBinding(BackgroundColorProperty, Colors.LightBlue, Color.FromArgb("#3b4a4f"));
 
+            ToolbarItems.Add(new ToolbarItem()
+            .Text("Calendarxxxxxx")
+            .Invoke(item => item.Clicked += async (sender, args) => await Shell.Current.GoToAsync(AppShell.GetRoute<CalendarPage>())));
+
             Content = new RefreshView
             {
                 Content = new CollectionView
                 {
                     Header = new SearchBar()
-                        .Placeholder("Search Titles")
+                        .Placeholder("Search Alps")
                         .Center()
                         .TextCenter()
                         .Behaviors(new UserStoppedTypingBehavior()

@@ -9,6 +9,14 @@ namespace HelloMauiDefault.Handlers
 {
     public partial class CalendarHandler
     {
+        public CalendarHandler(IPropertyMapper mapper, CommandMapper? commandMapper = null) : base(mapper, commandMapper)
+        {
+        }
+
+        public CalendarHandler() : this(PropertyMapper, CommandMapper)
+        {
+        }
+
         public static IPropertyMapper<ICalendarView, CalendarHandler> PropertyMapper = new PropertyMapper<ICalendarView, CalendarHandler>(ViewMapper)
         {
             [nameof(ICalendarView.FirstDayOfWeek)] = MapFirstDayOfWeek,
@@ -18,13 +26,5 @@ namespace HelloMauiDefault.Handlers
         };
 
         public static CommandMapper<ICalendarView, CalendarHandler> CommandMapper = new(ViewCommandMapper);
-
-        public CalendarHandler(IPropertyMapper mapper, CommandMapper? commandMapper = null) : base(mapper, commandMapper)
-        {
-        }
-
-        public CalendarHandler() : this(PropertyMapper, CommandMapper)
-        {
-        }
     }
 }
